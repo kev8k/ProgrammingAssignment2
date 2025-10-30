@@ -5,10 +5,17 @@ date: "2025-10-30"
 output: html_document
 keep_md: true
 ---
-```{r}
+
+``` r
 rm(list = ls(all.names = T))
 getwd()
+```
 
+```
+## [1] "C:/Users/kevin/Desktop/R Coursera/K5A1/m5a1"
+```
+
+``` r
 # Load required packages
 library("dplyr")
 
@@ -18,7 +25,16 @@ activity<-read.csv("C:/Users/kevin/Desktop/R Coursera/K5A1/repdata_data_activity
 activity$date <- as.Date(activity$date, format = "%Y-%m-%d")
 
 str(activity)
+```
 
+```
+## 'data.frame':	17568 obs. of  3 variables:
+##  $ steps   : int  NA NA NA NA NA NA NA NA NA NA ...
+##  $ date    : Date, format:  ...
+##  $ interval: int  0 5 10 15 20 25 30 35 40 45 ...
+```
+
+``` r
 #Tot number of steps
 ##sum tot num of steps by day
 steps_per_day <- activity %>%
@@ -26,21 +42,52 @@ steps_per_day <- activity %>%
   summarise(total_steps = sum(steps, na.rm = TRUE))
 
 head(steps_per_day)
+```
 
+```
+## # A tibble: 6 × 2
+##   date       total_steps
+##   <date>           <int>
+## 1 2012-10-01           0
+## 2 2012-10-02         126
+## 3 2012-10-03       11352
+## 4 2012-10-04       12116
+## 5 2012-10-05       13294
+## 6 2012-10-06       15420
+```
+
+``` r
 # Plot histogram of total steps per day
 hist(steps_per_day$total_steps,
      main = "Total Number of Steps Taken Each Day",
      xlab = "Total Steps per Day",
      col = "steelblue",
      breaks = 20)
+```
 
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-1.png)
+
+``` r
 # Calculate mean and median of total steps per day
 mean_steps <- mean(steps_per_day$total_steps)
 median_steps <- median(steps_per_day$total_steps)
 
 mean_steps
-median_steps
+```
 
+```
+## [1] 9354.23
+```
+
+``` r
+median_steps
+```
+
+```
+## [1] 10395
+```
+
+``` r
 #avg daily activity pattern
 
 ##avg number steps in 5 min intervall
@@ -56,17 +103,36 @@ plot(average_steps_interval$interval,
      xlab = "5-minute Interval",
      ylab = "Average Number of Steps",
      main = "Average Daily Activity Pattern")
+```
 
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-2.png)
+
+``` r
 max_interval <- average_steps_interval[which.max(average_steps_interval$mean_steps), ]
 
 max_interval
+```
 
+```
+## # A tibble: 1 × 2
+##   interval mean_steps
+##      <int>      <dbl>
+## 1      835       206.
+```
+
+``` r
 #missing value
 
 ##tot number of mv
 total_missing<- sum(is.na(activity$steps))
 total_missing
+```
 
+```
+## [1] 2304
+```
+
+``` r
 ##na replace with mean of 5 min intervall
 activity_filled <- activity %>%
   left_join(average_steps_interval, by = "interval") %>%
@@ -74,7 +140,13 @@ activity_filled <- activity %>%
   select(date, interval, steps)
 ## Check for any remaining NA values
 sum(is.na(activity_filled$steps))
+```
 
+```
+## [1] 0
+```
+
+``` r
 ## Calculate total steps per day with imputed data
 steps_per_day_filled <- activity_filled %>%
   group_by(date) %>%
@@ -86,21 +158,51 @@ hist(steps_per_day_filled$total_steps,
      xlab = "Total Steps per Day",
      col = "lightblue",
      breaks = 20)
+```
 
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-3.png)
+
+``` r
 ## mean and median again
 mean_steps_filled <- mean(steps_per_day_filled$total_steps)
 median_steps_filled <- median(steps_per_day_filled$total_steps)
 
 mean_steps_filled
-median_steps_filled
+```
 
+```
+## [1] 10766.19
+```
+
+``` r
+median_steps_filled
+```
+
+```
+## [1] 10766.19
+```
+
+``` r
 ## Compare to original results
 mean_diff <- mean_steps_filled - mean_steps
 median_diff <- median_steps_filled - median_steps
 
 mean_diff
-median_diff
+```
 
+```
+## [1] 1411.959
+```
+
+``` r
+median_diff
+```
+
+```
+## [1] 371.1887
+```
+
+``` r
 #differences in activity patterns between weekdays and weekends?
 
 activity_filled$date <- as.Date(activity_filled$date)
@@ -133,8 +235,9 @@ ggplot(avg_steps_daytype, aes(x = interval, y = mean_steps, color = day_type)) +
        x = "5-minute Interval",
        y = "Average Number of Steps") +
   theme_minimal()
-
 ```
+
+![plot of chunk unnamed-chunk-1](figure/unnamed-chunk-1-4.png)
 
 
 
