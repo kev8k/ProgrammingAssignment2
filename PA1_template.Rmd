@@ -1,9 +1,11 @@
 ---
-title: "PA1_template"
+title: 'Reproducible Research: Peer Assessment 1'
 author: "kev8k"
 date: "2025-10-30"
 output: html_document
 ---
+
+
 ```{r}
 rm(list = ls(all.names = T))
 getwd()
@@ -134,9 +136,3 @@ ggplot(avg_steps_daytype, aes(x = interval, y = mean_steps, color = day_type)) +
   theme_minimal()
 
 ```
-
-
-
-
-
-
